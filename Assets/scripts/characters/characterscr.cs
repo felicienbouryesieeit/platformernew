@@ -21,8 +21,10 @@ public class characterscr : physicbasescript
 
     public int xdirection=1;
 
-    private int lifemax=12;
+    private int lifemax=3;
     private int life;
+
+    public List<GameObject> listOfHearts;
 
     public int typeofmovement=0;
 
@@ -140,7 +142,7 @@ public class characterscr : physicbasescript
        
 
         
-        // Vérifier si le joueur est au sol
+        // VÃ©rifier si le joueur est au sol
         //isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
         // Saut
@@ -201,6 +203,14 @@ public class characterscr : physicbasescript
     public void changelife(int currentlife) {
 
         life += currentlife;
+        for (int i = 0; i < lifemax; i++)
+        {
+            if (i<life) {
+                listOfHearts[i].SetActive(true);
+            } else {
+                listOfHearts[i].SetActive(false);
+            }
+        }
         if (life<=0) {
             Destroy(gameObject);
         }
