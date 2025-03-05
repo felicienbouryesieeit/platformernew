@@ -14,35 +14,72 @@ public class playerbehavior : characterbehaviorpar
 
     private float updown;
 
+    // Variables pour le dash
+    [SerializeField] private float doubleTapThreshold = 0.3f; // Temps max entre deux pressions pour un dash
+    [SerializeField] private float dashForce = 15f;           // Force appliquée lors du dash
+    [SerializeField] private float dashDuration = 0.2f;         // Durée du dash
+    [SerializeField] private float dashCooldown = 1f;           // Temps d'attente entre 2 dash
+    private float lastRightTapTime = -1f;
+    private float lastLeftTapTime = -1f;
+    private bool isDashing = false;
+    private bool canDash = true;
+
     protected override void Start2()
     {
         base.Start2();
+        _rb = GetComponent<Rigidbody2D>();
         //charactervar = GetComponent<characterscr>();
-        
     }
 
     public override void begincharacterbehavior()
     {
         base.begincharacterbehavior();
-        gamemanagervar.playercharacter=this.charactervar;
-        
-        Debug.Log("soucoupe"+charactervar);
-        Debug.Log("soucoupe chien"+(gamemanagervar==null));
-
+        gamemanagervar.playercharacter = this.charactervar;
+        Debug.Log("soucoupe" + charactervar);
+        Debug.Log("soucoupe chien" + (gamemanagervar == null));
     }
+
     public override void UpdateBehavior()
     {
         base.UpdateBehavior();
+        
+        // Déplacement de la caméra
         camera.transform.position = new Vector3(
-            gameObject.transform.position.x,
-            gameObject.transform.position.y,
+            transform.position.x,
+            transform.position.y,
             camera.transform.position.z
         );
 
-        
-        charactervar.moveInput = Input.GetAxis("Horizontal");
-        
-        Debug.Log("minecraft"+charactervar.moveInput);
+        // Gestion du dash - vérification des doubles appuis sur D (droite) et A (gauche)
+        if (canDash && !isDashing)
+        {
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                if (Time.time - lastRightTapTime < doubleTapThreshold)
+                {
+                    StartCoroutine(Dash(1)); // Dash vers la droite
+                }
+                lastRightTapTime = Time.time;
+            }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                if (Time.time - lastLeftTapTime < doubleTapThreshold)
+                {
+                    StartCoroutine(Dash(-1)); // Dash vers la gauche
+                }
+                lastLeftTapTime = Time.time;
+            }
+        }
+        if (!isDashing)
+        {
+            charactervar.moveInput = Input.GetAxis("Horizontal");
+        }
+        else
+        {
+            charactervar.moveInput = 0;
+        }
+
+        Debug.Log("minecraft" + charactervar.moveInput);
 
         updown = Input.GetAxis("Vertical");
        
@@ -51,40 +88,26 @@ public class playerbehavior : characterbehaviorpar
         if (Input.GetKeyDown(KeyCode.X ))
         {
             charactervar.Jump();
-
         }
 
-
-
+        // Gestion du tir
         if (Input.GetKeyDown(KeyCode.C))
         {
             float angleshoot = 0;
             
-            if (MathF.Abs(updown)>0.1) {
-                Debug.Log("sasha : " + (updown));
-                if (updown>0) {
-                    Debug.Log("sasha dada : " + (updown));
-                    angleshoot = 90;
-                    
-                } else {
-                    Debug.Log("sasha dodo : " + (updown));
-                    angleshoot = 270;
-                }
+            if (MathF.Abs(updown) > 0.1f)
+            {
+                Debug.Log("sasha : " + updown);
+                angleshoot = (updown > 0) ? 90f : 270f;
             }
-            else {
-            if (charactervar.xdirection==1) {
-                angleshoot = 0;
-            } else {
-                angleshoot = 180;
-            };
-            
+            else
+            {
+                angleshoot = (charactervar.xdirection == 1) ? 0f : 180f;
+            }
 
+            charactervar.shoot(angleshoot, 10f, 5.0f);
+            //charactervar.circleshoot(5,10f,10.0f);
         }
-
-        charactervar.shoot(angleshoot,10f,5.0f);
-        //charactervar.circleshoot(5,10f,10.0f);
-        }
-        
     }
 
 
@@ -105,4 +128,20 @@ public class playerbehavior : characterbehaviorpar
 
 
 
+    private IEnumerator Dash(int direction)
+    {
+        isDashing = true;
+        canDash = false;  // Désactive le dash pendant le cooldown
+        float startTime = Time.time;
+        while (Time.time < startTime + dashDuration)
+        {
+            // Appliquer la vélocité de dash (conserve la vélocité verticale actuelle)
+            _rb.velocity = new Vector2(dashForce * direction, _rb.velocity.y);
+            yield return null;
+        }
+        isDashing = false;
+        // Attendre le cooldown avant d'autoriser un nouveau dash
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+    }
 }

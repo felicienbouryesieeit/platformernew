@@ -179,5 +179,5 @@ MonoBehaviour:
     m_Bits: 0
   moveInput: 0
   xdirection: 1
-  damage: 5
+  damage: 1
   currentcharacter: {fileID: 0}

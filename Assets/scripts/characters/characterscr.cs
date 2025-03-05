@@ -21,8 +21,10 @@ public class characterscr : physicbasescript
 
     public int xdirection=1;
 
-    private int lifemax=12;
+    private int lifemax=3;
     private int life;
+
+    public List<GameObject> listOfHearts;
 
     public int typeofmovement=0;
 
@@ -33,8 +35,6 @@ public class characterscr : physicbasescript
 
     //[SerializeField]
     private List<List<int>> animationlist;
-
-    private string baseimage;
 
     
 
@@ -58,6 +58,10 @@ public class characterscr : physicbasescript
 
     private float pushx = 0;
     
+    
+    private string baseimage;
+
+
 
 
 
@@ -94,7 +98,11 @@ public class characterscr : physicbasescript
 
     }
 
-    // Update is called once per frame
+    
+
+
+
+       // Update is called once per frame
     protected override void Update2()
     {
         base.Update2();
@@ -181,6 +189,10 @@ public class characterscr : physicbasescript
         animatorvar.changecurrentanimation(0);
     }
 
+
+
+
+
     public void stopwalljump() {
         pushx -= Mathf.Sign(pushx);
         if (Mathf.Abs(pushx) <= 0) {
@@ -235,6 +247,16 @@ public class characterscr : physicbasescript
     public void changelife(int currentlife) {
 
         life += currentlife;
+        
+        for (int i = 0; i < lifemax; i++)
+        {
+            if (i<life) {
+                listOfHearts[i].SetActive(true);
+            } else {
+                listOfHearts[i].SetActive(false);
+            }
+        }
+        
         if (life<=0) {
             Destroy(gameObject);
         }
@@ -253,7 +275,6 @@ public class characterscr : physicbasescript
         projectilescript.setangle(angle);
         projectilescript.beginrange(range);
         projectilescript.currentcharacter = this;
-        
     }
 
     public void circleshoot(float angleplus,int numberofbullets,float speed,float range) {
