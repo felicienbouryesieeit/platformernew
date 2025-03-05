@@ -83,8 +83,9 @@ public class playerbehavior : characterbehaviorpar
 
         updown = Input.GetAxis("Vertical");
        
-        // Saut normal
-        if (Input.GetKeyDown(KeyCode.Space))
+        
+        //Mathf.Abs()
+        if (Input.GetKeyDown(KeyCode.X ))
         {
             charactervar.Jump();
         }
@@ -108,6 +109,24 @@ public class playerbehavior : characterbehaviorpar
             //charactervar.circleshoot(5,10f,10.0f);
         }
     }
+
+
+
+    protected override void beginanimator()
+    {
+        base.beginanimator();
+        baseimage = "player";
+        animationlist = new List<List<int>> {
+    //idle
+    new List<int> { 1},
+    //walk
+    new List<int> { 1,2 },
+    //fall
+    new List<int> { 3 }
+};
+    }
+
+
 
     private IEnumerator Dash(int direction)
     {

@@ -16,4 +16,27 @@ public class ennemy1behavior : characterbehaviorpar
         followplayer(0);
     }
 
+
+
+
+
+
+
+
+
+    protected override void beginanimator()
+    {
+        base.beginanimator();
+        baseimage = "ennemy1";
+        animationlist = new List<List<int>> {
+    //idle
+    new List<int> { 0},
+    //walk
+    new List<int> { 1,2 },
+    //fall
+    new List<int> { 3 }
+};
+    }
+
+
 }

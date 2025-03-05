@@ -10,8 +10,8 @@ public int currentframe;
 private List<List<int>> animationlist;
 private int currentanimation;
 
-public void beginanimator(SpriteRenderer spriteRenderervar2,List<List<int>> animationlist2) {
-    sprites = Resources.LoadAll<Sprite>("player");
+public void beginanimator(SpriteRenderer spriteRenderervar2,List<List<int>> animationlist2,string baseimage) {
+    sprites = Resources.LoadAll<Sprite>(baseimage);
     spriteRenderervar=spriteRenderervar2;
     animationlist=animationlist2;
     
@@ -21,8 +21,12 @@ public void beginanimator(SpriteRenderer spriteRenderervar2,List<List<int>> anim
 }
 
 public void changecurrentanimation(int currentanimation2) {
+    
+    if (currentanimation!=currentanimation2) {
+    Debug.Log("current!");
     currentanimation = currentanimation2;
     currentframe=0;
+    }
 }
 
 public void updateanimator() {
@@ -35,6 +39,7 @@ if (currentframe==animationlist[currentanimation].Count) {
 } else {
 
 }
+Debug.Log("current anim : "+ currentanimation +" current frame : "+currentframe + " current frame max : "+animationlist[currentanimation].Count);
 Invoke("updateanimator", 0.1f);
 }
 

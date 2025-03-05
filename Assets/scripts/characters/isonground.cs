@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class isonground : basescript
+public class isonground : wallreaction
 {
 public bool isongroundbool;
 private characterscr charactervar;
@@ -46,13 +46,7 @@ void OnTriggerEnter2D(Collider2D collision)
         }
     }
 
-    private bool iscorrectground(Collider2D collision) {
-        projectilescrpar otherprojectile= collision.gameObject.GetComponent<projectilescrpar>();
-        //characterscr othercharacter = collision.gameObject.GetComponent<characterscr>();
-
-        
-        return (otherprojectile == null); // && othercharacter == null;
-    }
+    
 }
 
 
