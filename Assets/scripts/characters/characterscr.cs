@@ -46,7 +46,15 @@ public class characterscr : physicbasescript
     [SerializeField]
     private isonground isongroundvar;
 
+    [SerializeField]
+    private WallJump walljumpvar1;
+
+    [SerializeField]
+    private WallJump walljumpvar2;
+
     private animatorscr animatorvar;
+
+    private float pushx = 0;
     
 
 
@@ -122,7 +130,7 @@ public class characterscr : physicbasescript
         */
         switch (typeofmovement) {
             case 0:
-             rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+             rb.velocity = new Vector2((moveInput * moveSpeed)+pushx, rb.velocity.y);
              break;
 
             case 1:
@@ -139,18 +147,42 @@ public class characterscr : physicbasescript
         
     }
 
-    
+    public void stopwalljump() {
+        pushx -= Mathf.Sign(pushx);
+        if (Mathf.Abs(pushx) <= 0) {
+            pushx = 0;
+        }
+        else {
+            Invoke("stopwalljump",0.1f);
+        }
+        
+    }
 
     public void Jump() {
+        if (walljumpvar1.isTouchingWall || walljumpvar2.isTouchingWall) {
+            
+            if (isongroundvar.isongroundbool==false) {
+            pushx = 10;
+            if (walljumpvar1.isTouchingWall) {
+            pushx = -pushx;
+            }
+            Jump2();
+            Invoke("stopwalljump",0.1f);
+            }
+            
+        }
         if (canjump!=0) {
             if (isongroundvar.isongroundbool==false) {
             canjump-=1;
             }
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            Jump2();
             }
     }
 
+    private void Jump2(){
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
+    }
 
 
 
