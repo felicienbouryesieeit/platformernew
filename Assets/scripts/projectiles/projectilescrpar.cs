@@ -89,7 +89,7 @@ public class projectilescrpar :  basescript
     {
         projectilescrpar otherprojectile= collision.gameObject.GetComponent<projectilescrpar>();
         characterscr othercharacter = collision.gameObject.GetComponent<characterscr>();
-        isonground otherisonground = collision.gameObject.GetComponent<isonground>();
+        wallreaction otherisonground = collision.gameObject.GetComponent<wallreaction>();
 
         if (otherprojectile == null && othercharacter == null && otherisonground==null) {
              oncollisiondestroy();

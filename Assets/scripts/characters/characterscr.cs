@@ -34,6 +34,8 @@ public class characterscr : physicbasescript
     //[SerializeField]
     private List<List<int>> animationlist;
 
+    private string baseimage;
+
     
 
 
@@ -63,16 +65,10 @@ public class characterscr : physicbasescript
     {
         base.Start2();
         
-        animationlist = new List<List<int>> {
-    //idle
-    new List<int> { 1},
-    //walk
-    new List<int> { 1,2 }
-};
+        
 
-        SpriteRenderer spriteRenderervar=GetComponent<SpriteRenderer>();
-        animatorvar = GetComponent<animatorscr>();
-        animatorvar.beginanimator(spriteRenderervar,animationlist);
+        
+        
         
         isongroundvar.beginisonground(this);
         
@@ -87,6 +83,17 @@ public class characterscr : physicbasescript
         }
             }
 
+    public void beginanimation(List<List<int>> animationlist2,string baseimage2) {
+        SpriteRenderer spriteRenderervar=GetComponent<SpriteRenderer>();
+        animatorvar = GetComponent<animatorscr>();
+        animationlist=animationlist2;
+        baseimage=baseimage2;
+        /*
+        */
+        animatorvar.beginanimator(spriteRenderervar,animationlist,baseimage);
+
+    }
+
     // Update is called once per frame
     protected override void Update2()
     {
@@ -99,13 +106,15 @@ public class characterscr : physicbasescript
         if (characterbehaviorvar != null) {
             characterbehaviorvar.UpdateBehavior();
         }
-
+        //animatorvar.changecurrentanimation(0);
         if (Mathf.Abs(moveInput)>0.2) {
+            
             if (xdirection != (int)Mathf.Sign(moveInput)) {
+            //animatorvar.changecurrentanimation(1);
             
             xdirection = (int)Mathf.Sign(moveInput);
             animatorvar.flipimage(xdirection==-1);
-            animatorvar.changecurrentanimation(1);
+            
 
             }
 
@@ -113,10 +122,14 @@ public class characterscr : physicbasescript
         } else {
             if (moveInput!=0) {
                 moveInput=0;
-                animatorvar.changecurrentanimation(0);
+                //animatorvar.changecurrentanimation(0);
             }
+        
+        
             
         }
+
+        
 
         /*
         Debug.Log("groupe : " + (Mathf.Abs(moveInput)) + " " + (Mathf.Abs(moveInput)<0.2) );
@@ -131,10 +144,12 @@ public class characterscr : physicbasescript
         switch (typeofmovement) {
             case 0:
              rb.velocity = new Vector2((moveInput * moveSpeed)+pushx, rb.velocity.y);
+             groundanimation();
              break;
 
             case 1:
             rb.velocity = new Vector2(moveInput * moveSpeed, moveInputY * moveSpeed);
+            flyinganimation();
             break;
         }
        
@@ -145,6 +160,25 @@ public class characterscr : physicbasescript
 
         // Saut
         
+    }
+
+    private void groundanimation() {
+        if (isongroundvar.isongroundbool==false) {
+            animatorvar.changecurrentanimation(2);
+        } else {
+            
+            Debug.Log("louis"+(Mathf.Abs(moveInput)>0.2));
+            if (Mathf.Abs(moveInput)>0.2) {
+            animatorvar.changecurrentanimation(1);    
+            } else {
+            animatorvar.changecurrentanimation(0);
+            }
+            
+        }
+    }
+
+    private void flyinganimation() {
+        animatorvar.changecurrentanimation(0);
     }
 
     public void stopwalljump() {
@@ -219,6 +253,7 @@ public class characterscr : physicbasescript
         projectilescript.setangle(angle);
         projectilescript.beginrange(range);
         projectilescript.currentcharacter = this;
+        
     }
 
     public void circleshoot(float angleplus,int numberofbullets,float speed,float range) {

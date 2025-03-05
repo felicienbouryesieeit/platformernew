@@ -7,6 +7,8 @@ public class characterbehaviorpar : basescript
 {
     protected characterscr charactervar;
     private float cadence=1;
+    protected List<List<int>> animationlist; 
+    protected string baseimage;
 
     protected override void Start2()
     {
@@ -24,6 +26,7 @@ public class characterbehaviorpar : basescript
 
     public virtual void begincharacterbehavior() {
         charactervar = GetComponent<characterscr>();
+        beginanimator2();
     }
 
     private void cadencevoid() {
@@ -84,5 +87,20 @@ public class characterbehaviorpar : basescript
             charactervar.rb.gravityScale = 0;
             break;
         }
+    }
+
+    private void beginanimator2() {
+        beginanimator();
+        
+        charactervar.beginanimation(animationlist,baseimage);
+    }
+
+
+    protected virtual void beginanimator() {
+        /*
+        
+        
+        */
+
     }
 }
