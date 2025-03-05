@@ -7,6 +7,11 @@ public class playerbehavior : characterbehaviorpar
 {
     [SerializeField]
     private GameObject camera;
+    [SerializeField] private LayerMask wallLayer; 
+    private bool _isTouchingWall = false;
+    private bool _isGrounded = false;
+    private Rigidbody2D _rb;
+
     private float updown;
 
     protected override void Start2()
@@ -43,7 +48,7 @@ public class playerbehavior : characterbehaviorpar
        
         
         //Mathf.Abs()
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             charactervar.Jump();
 
