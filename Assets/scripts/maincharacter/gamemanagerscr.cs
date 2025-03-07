@@ -47,7 +47,7 @@ public class gamemanagerscr : MonoBehaviour
     public void ShowVictory()
     {
         victoryCanvas.SetActive(true);
-        Time.timeScale = 0;
+        Time.timeScale = 1;
         gameIsOver = true;
     }
 
