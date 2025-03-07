@@ -6,6 +6,7 @@ public class gamemanagerscr : MonoBehaviour
 {
     public static gamemanagerscr gamemanagervar2;
     public characterscr playercharacter;
+    public heartuiscr heartuivar;
     // Start is called before the first frame update
     void Awake()
     {

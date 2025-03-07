@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -21,8 +22,8 @@ public class characterscr : physicbasescript
 
     public int xdirection=1;
 
-    private int lifemax=3;
-    private int life;
+    public int lifemax=3;
+    public int life;
 
     public List<GameObject> listOfHearts;
 
@@ -35,6 +36,7 @@ public class characterscr : physicbasescript
 
     //[SerializeField]
     private List<List<int>> animationlist;
+    private List<List<float>> animationdurationlist;
 
     
 
@@ -54,12 +56,19 @@ public class characterscr : physicbasescript
     [SerializeField]
     private WallJump walljumpvar2;
 
-    private animatorscr animatorvar;
+    public animatorscr animatorvar;
+    //private List<>
 
     private float pushx = 0;
     
     
     private string baseimage;
+
+
+
+    
+
+    
 
 
 
@@ -87,18 +96,60 @@ public class characterscr : physicbasescript
         }
             }
 
-    public void beginanimation(List<List<int>> animationlist2,string baseimage2) {
+    public void beginanimation(List<List<int>> animationlist2,string baseimage2
+    ,List<List<float>> animationdurationlist2
+    ) {
         SpriteRenderer spriteRenderervar=GetComponent<SpriteRenderer>();
+
         animatorvar = GetComponent<animatorscr>();
         animationlist=animationlist2;
+        animationdurationlist= animationdurationlist2;
+        
         baseimage=baseimage2;
+
         /*
         */
-        animatorvar.beginanimator(spriteRenderervar,animationlist,baseimage);
+        animatorvar.beginanimator(spriteRenderervar,animationlist,animationdurationlist,baseimage);
 
     }
 
     
+
+
+
+
+
+
+
+
+
+
+/*
+    public void setxdirection2(bool xdirection2) {
+        animatorvar.flipimage(xdirection2);
+        if (xdirection2) {
+            xdirection=1;
+        } else {
+            xdirection=-1;
+        }
+
+    }*/
+
+    public void setxdirection(int xdirection2) {
+        
+            xdirection = xdirection2;
+            
+            animatorvar.flipimage(xdirection==-1);
+            
+    }
+
+
+    public void setflipfunc2() {
+        
+        if (characterbehaviorvar.havecustomflipping==false) {
+            setxdirection((int)Mathf.Sign(moveInput));
+            }
+    }
 
 
 
@@ -120,11 +171,13 @@ public class characterscr : physicbasescript
             if (xdirection != (int)Mathf.Sign(moveInput)) {
             //animatorvar.changecurrentanimation(1);
             
-            xdirection = (int)Mathf.Sign(moveInput);
-            animatorvar.flipimage(xdirection==-1);
+            setflipfunc2();
+            
             
 
             }
+            //xdirection=-xdirection;
+            //animatorvar.flipimage(xdirection==-1);
 
             Debug.Log("horizontal bus : " + xdirection + " " );
         } else {
@@ -151,13 +204,14 @@ public class characterscr : physicbasescript
         */
         switch (typeofmovement) {
             case 0:
-             rb.velocity = new Vector2((moveInput * moveSpeed)+pushx, rb.velocity.y);
-             groundanimation();
+             rb.velocity = new UnityEngine.Vector2((moveInput * moveSpeed)+pushx, rb.velocity.y);
+             
+             typeofanimation(0);
              break;
 
             case 1:
-            rb.velocity = new Vector2(moveInput * moveSpeed, moveInputY * moveSpeed);
-            flyinganimation();
+            rb.velocity = new UnityEngine.Vector2(moveInput * moveSpeed, moveInputY * moveSpeed);
+            
             break;
         }
        
@@ -168,6 +222,20 @@ public class characterscr : physicbasescript
 
         // Saut
         
+    }
+
+    private void typeofanimation(int animationtype) {
+        if (characterbehaviorvar.havecustomanimation==false) {
+        switch (animationtype) {
+            case 0:
+            groundanimation();
+            break;
+
+            case 1:
+            flyinganimation();
+            break;
+        }
+        }
     }
 
     private void groundanimation() {
@@ -226,7 +294,7 @@ public class characterscr : physicbasescript
     }
 
     private void Jump2(){
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        rb.velocity = new UnityEngine.Vector2(rb.velocity.x, jumpForce);
 
     }
 
@@ -250,13 +318,15 @@ public class characterscr : physicbasescript
         
         for (int i = 0; i < lifemax; i++)
         {
+            /*
             if (i<life) {
                 listOfHearts[i].SetActive(true);
             } else {
                 listOfHearts[i].SetActive(false);
-            }
+            }*/
         }
         
+        characterbehaviorvar.ondamage();
         if (life<=0) {
             Destroy(gameObject);
         }
@@ -265,9 +335,12 @@ public class characterscr : physicbasescript
     public void takedamage(int damageamount) {
         changelife(-damageamount);
     }
-
-    public void shoot(float angle,float speed,float range) {
-        GameObject projectile = Instantiate(projectilelist[0],gameObject.transform.position,quaternion.Euler(0,0,90));
+    public void shoot(float angle,float speed,float range){
+        UnityEngine.Vector3 addposition = new UnityEngine.Vector3(0, 0,0);
+        shoot2(addposition,angle,speed,range);
+    }
+    public void shoot2(UnityEngine.Vector3 addposition , float angle,float speed,float range) {
+        GameObject projectile = Instantiate(projectilelist[0],(gameObject.transform.position+addposition),quaternion.Euler(0,0,90));
 
         projectilescrpar projectilescript = projectile.GetComponent<projectilescrpar>();
 
@@ -275,6 +348,10 @@ public class characterscr : physicbasescript
         projectilescript.setangle(angle);
         projectilescript.beginrange(range);
         projectilescript.currentcharacter = this;
+    }
+
+    public void shootroof(){
+        //shoot2();
     }
 
     public void circleshoot(float angleplus,int numberofbullets,float speed,float range) {
@@ -287,9 +364,106 @@ public class characterscr : physicbasescript
         }
         
         
+        
     }
 
     
+
+
+    public void shootshotgun(float angleplus,float ecart,int numberofbullets,float speed,float range) {
+        //numberofbullets-=1;
+        float angle2 = ecart;
+        bool ispair= (numberofbullets%2==0);
+        //int numberofbullets2 = 0;
+
+        
+        int beginboucle2=0;
+        int i2=0;
+        //Debug.Log("shotgun : "+midboucle);
+        if (ispair==true) {
+            numberofbullets+=1;
+        } else {
+            
+        }
+
+        int midboucle = (numberofbullets/2)+1;
+
+        for (int i = 0; i < numberofbullets; i++)
+        {
+            //bool canshoot=true;
+
+            float angle3=angle2;
+
+            //bool ispair2= (i%2==0);
+
+            if (i>=midboucle) {
+                beginboucle2-=1;
+                i2=beginboucle2;
+                
+            } else {
+                i2=i;
+            }
+
+
+
+            /*
+            if (i!=0) {
+                if (ispair2) {
+
+                } else {
+
+                }
+            };*/
+
+
+
+            if (ispair==true) {
+                if (Mathf.Abs(i2)==1) {
+                    angle3 = angle3*0.6f;
+                }
+            }
+
+            if (ispair==true && i==0) {
+            
+            } else {
+                shoot(((i2*angle3))+angleplus,speed,range);
+            }
+            /*
+            if (ispair==true && i==0) {
+                canshoot=false;
+                
+            }
+
+            if (i==1) {
+                angle3=angle2*0.8f;
+            }
+
+            if (canshoot==true) {
+            
+            if (numberofbullets>=numberofbullets2) {
+            shoot(((i*angle3))+angleplus,speed,range);
+            numberofbullets2+=1;
+            }
+            */
+            /*
+            if (numberofbullets>=numberofbullets2) {
+            shoot(((i*-angle3))+angleplus,speed,range);
+            numberofbullets2+=1;
+            }
+
+            }*/
+            
+        }
+        
+
+        
+        
+    }
+
+    /*
+    private void shootshotgun2(float angleplus,float speed,float range) {
+        shoot(((i*angle2))+angleplus,speed,range);
+    }*/
 
 
 }

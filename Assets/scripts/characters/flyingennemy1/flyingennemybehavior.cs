@@ -20,6 +20,7 @@ protected override void oncadenceattack()
     {
         base.UpdateBehavior();
         followplayerflying(0);
+        
     }
 
 
@@ -32,9 +33,8 @@ protected override void oncadenceattack()
     {
         base.beginanimator();
         baseimage = "flyingennemy1";
-        animationlist = new List<List<int>> {
-    //idle
-    new List<int> {0,1},
-};
+        beginanimator3(0);
+        
     }
 }
+ 

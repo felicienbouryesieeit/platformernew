@@ -14,6 +14,9 @@ public class playerbehavior : characterbehaviorpar
 
     private float updown;
 
+    [SerializeField]
+    private GameObject heartuiobject;
+
     // Variables pour le dash
     [SerializeField] private float doubleTapThreshold = 0.3f; // Temps max entre deux pressions pour un dash
     [SerializeField] private float dashForce = 15f;           // Force appliquée lors du dash
@@ -23,6 +26,8 @@ public class playerbehavior : characterbehaviorpar
     private float lastLeftTapTime = -1f;
     private bool isDashing = false;
     private bool canDash = true;
+    private heartuiscr heartuivar;
+    private GameObject heartuiobject2;
 
     protected override void Start2()
     {
@@ -37,6 +42,24 @@ public class playerbehavior : characterbehaviorpar
         gamemanagervar.playercharacter = this.charactervar;
         Debug.Log("soucoupe" + charactervar);
         Debug.Log("soucoupe chien" + (gamemanagervar == null));
+        resetlifevoid();
+    }
+
+    public override void ondamage()
+    {
+        base.ondamage();
+        resetlifevoid();
+    }
+
+    private void resetlifevoid()
+    {
+        if (heartuiobject2!=null) {
+            Destroy(heartuiobject2);
+        }
+        heartuiobject2 = Instantiate(heartuiobject);
+        heartuivar = heartuiobject2.GetComponent<heartuiscr>();
+        heartuivar.beginheart(this);
+        
     }
 
     public override void UpdateBehavior()
@@ -53,6 +76,15 @@ public class playerbehavior : characterbehaviorpar
         // Gestion du dash - vérification des doubles appuis sur D (droite) et A (gauche)
         if (canDash && !isDashing)
         {
+            if (Input.GetKeyDown(KeyCode.V)){
+                if (charactervar.xdirection==-1) 
+                {
+                    StartCoroutine(Dash(-1));
+                } else {
+                    StartCoroutine(Dash(1));
+                }
+                 
+            }
             if (Input.GetKeyDown(KeyCode.D))
             {
                 if (Time.time - lastRightTapTime < doubleTapThreshold)
@@ -116,14 +148,7 @@ public class playerbehavior : characterbehaviorpar
     {
         base.beginanimator();
         baseimage = "player";
-        animationlist = new List<List<int>> {
-    //idle
-    new List<int> { 1},
-    //walk
-    new List<int> { 1,2 },
-    //fall
-    new List<int> { 3 }
-};
+        beginanimator3(1);
     }
 
 
@@ -136,7 +161,7 @@ public class playerbehavior : characterbehaviorpar
         while (Time.time < startTime + dashDuration)
         {
             // Appliquer la vélocité de dash (conserve la vélocité verticale actuelle)
-            _rb.velocity = new Vector2(dashForce * direction, _rb.velocity.y);
+            _rb.velocity = new Vector2(dashForce * direction, 0);//_rb.velocity.y);
             yield return null;
         }
         isDashing = false;
