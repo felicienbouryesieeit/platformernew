@@ -137,7 +137,7 @@ public class playerbehavior : characterbehaviorpar
                 angleshoot = (charactervar.xdirection == 1) ? 0f : 180f;
             }
 
-            charactervar.shoot(angleshoot, 10f, 5.0f);
+            charactervar.shoot(angleshoot, 15f, 5.0f);
             //charactervar.circleshoot(5,10f,10.0f);
         }
     }

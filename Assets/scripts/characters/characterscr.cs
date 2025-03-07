@@ -63,7 +63,8 @@ public class characterscr : physicbasescript
     
     
     private string baseimage;
-
+    [SerializeField]
+    private float aircontrol = 1;
 
 
     
@@ -201,18 +202,33 @@ public class characterscr : physicbasescript
         
         }
         Debug.Log("groupe bis : " + (Mathf.Abs(moveInput)));
+
+        
         */
+        float moveSpeed2=moveSpeed;
+        if (isongroundvar.isongroundbool==true) {
+            
+        } else {
+            //aircontrol1=aircontrol;
+            moveSpeed2=moveSpeed*aircontrol;
+
+        }
+
+        print("speed :");
+        if (rb!=null) {
         switch (typeofmovement) {
             case 0:
-             rb.velocity = new UnityEngine.Vector2((moveInput * moveSpeed)+pushx, rb.velocity.y);
+            
+             rb.velocity = new UnityEngine.Vector2((moveInput * moveSpeed2)+pushx, rb.velocity.y);
              
              typeofanimation(0);
              break;
 
             case 1:
-            rb.velocity = new UnityEngine.Vector2(moveInput * moveSpeed, moveInputY * moveSpeed);
+            rb.velocity = new UnityEngine.Vector2(moveInput * (moveSpeed), moveInputY * moveSpeed);
             
             break;
+        }
         }
        
 

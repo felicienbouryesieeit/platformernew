@@ -29,7 +29,7 @@ void OnTriggerEnter2D(Collider2D collision)
         if (iscorrectground(collision)) {
         isongroundbool=true;
         charactervar.canjump=charactervar.canjumpmax;
-        collidervar.sharedMaterial = emptymat;
+        //collidervar.sharedMaterial = emptymat;
         //capsuleCollidervar.
         
          }
@@ -42,7 +42,7 @@ void OnTriggerEnter2D(Collider2D collision)
         if (iscorrectground(collision)) {
         isongroundbool=false;
         charactervar.canjump-=1;
-        collidervar.sharedMaterial = slipvar;
+        //collidervar.sharedMaterial = slipvar;
         }
     }
 
