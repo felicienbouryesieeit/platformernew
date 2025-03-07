@@ -159,7 +159,7 @@ public class characterscr : physicbasescript
     {
         base.Update2();
 
-        
+        Debug.Log("jump"+canjump);
         if (gameObject.transform.rotation!=quaternion.Euler(0, 0, 0)) {
         gameObject.transform.rotation=quaternion.Euler(0,0,0);
         }
@@ -180,7 +180,7 @@ public class characterscr : physicbasescript
             //xdirection=-xdirection;
             //animatorvar.flipimage(xdirection==-1);
 
-            Debug.Log("horizontal bus : " + xdirection + " " );
+            //Debug.Log("horizontal bus : " + xdirection + " " );
         } else {
             if (moveInput!=0) {
                 moveInput=0;
@@ -289,9 +289,12 @@ public class characterscr : physicbasescript
     }
 
     public void Jump() {
+        bool iswalljumping = false;
         if (walljumpvar1.isTouchingWall || walljumpvar2.isTouchingWall) {
             
+            
             if (isongroundvar.isongroundbool==false) {
+            iswalljumping = true;
             pushx = 10;
             if (walljumpvar1.isTouchingWall) {
             pushx = -pushx;
@@ -303,7 +306,8 @@ public class characterscr : physicbasescript
         }
         if (canjump!=0) {
             if (isongroundvar.isongroundbool==false) {
-            canjump-=1;
+            if (iswalljumping==false) {
+            canjump-=1;}
             }
             Jump2();
             }

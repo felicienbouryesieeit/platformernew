@@ -144,6 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTouchingWall: 0
+  charactervar: {fileID: 7564323246661770787}
+  slipvar: {fileID: 6200000, guid: d430776722329a346b686119ed998b1c, type: 2}
 --- !u!1 &3950616447031236854
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,12 +288,17 @@ MonoBehaviour:
   moveInput: 0
   moveInputY: 0
   xdirection: 1
+  lifemax: 3
+  life: 0
+  listOfHearts: []
   typeofmovement: 0
   projectilelist:
   - {fileID: 7875010755847719597, guid: 9515a2ff9a9a3b34a90a8acf79c7f740, type: 3}
   isongroundvar: {fileID: 4524359313880454777}
   walljumpvar1: {fileID: 8542429058173019991}
   walljumpvar2: {fileID: 5837713071987961359}
+  animatorvar: {fileID: 0}
+  aircontrol: 1
 --- !u!70 &1713653457214131167
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -341,6 +348,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprites: []
   currentframe: 0
+  animationspeed: 0.1
+  stopanimation: 0
 --- !u!1 &4980024678488006197
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,6 +494,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isTouchingWall: 0
+  charactervar: {fileID: 7564323246661770787}
+  slipvar: {fileID: 6200000, guid: d430776722329a346b686119ed998b1c, type: 2}
 --- !u!1 &6413982600779485202
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,4 +640,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isongroundbool: 0
-  slipvar: {fileID: 6200000, guid: d430776722329a346b686119ed998b1c, type: 2}

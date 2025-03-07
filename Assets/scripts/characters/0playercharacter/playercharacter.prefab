@@ -114,6 +114,6 @@ MonoBehaviour:
     m_Bits: 0
   heartuiobject: {fileID: 4856498624312923507, guid: ef461a25fe86cd74bb5f66b3ee832c3e, type: 3}
   doubleTapThreshold: 0.3
-  dashForce: 18
+  dashForce: 14.5
   dashDuration: 0.2
   dashCooldown: 0.3
