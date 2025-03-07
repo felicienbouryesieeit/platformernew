@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class characterbehaviorpar : basescript
@@ -26,7 +27,10 @@ public class characterbehaviorpar : basescript
 
 
 
-
+    public virtual void  Ondeath() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
     protected void currentlistattackvoid() {
 
         onlistattackvoid();

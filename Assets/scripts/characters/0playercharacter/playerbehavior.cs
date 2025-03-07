@@ -29,6 +29,13 @@ public class playerbehavior : characterbehaviorpar
     private heartuiscr heartuivar;
     private GameObject heartuiobject2;
 
+    public override void Ondeath()
+    {
+        base.Ondeath();
+
+        
+    }
+
     protected override void Start2()
     {
         base.Start2();

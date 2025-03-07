@@ -348,6 +348,7 @@ public class characterscr : physicbasescript
         
         characterbehaviorvar.ondamage();
         if (life<=0) {
+            characterbehaviorvar.Ondeath();
             Destroy(gameObject);
         }
     }
