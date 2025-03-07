@@ -163,7 +163,7 @@ public class characterscr : physicbasescript
        
 
         
-        // VÃ©rifier si le joueur est au sol
+        // Vérifier si le joueur est au sol
         //isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
         // Saut
@@ -247,6 +247,16 @@ public class characterscr : physicbasescript
     public void changelife(int currentlife) {
 
         life += currentlife;
+        
+        for (int i = 0; i < lifemax; i++)
+        {
+            if (i<life) {
+                listOfHearts[i].SetActive(true);
+            } else {
+                listOfHearts[i].SetActive(false);
+            }
+        }
+        
         if (life<=0) {
             Destroy(gameObject);
         }
